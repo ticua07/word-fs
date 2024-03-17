@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Get file">
+  <main class="bg-neutral-950">
+    <section
+      class="w-screen h-screen flex flex-col justify-center items-center gap-4"
+    >
+      <button id="get" class="text-white bg-slate-900 w-36 px-4 py-2 rounded">
+        Get
+      </button>
+
+      <a
+        download
+        id="download"
+        class="text-white bg-green-800 w-36 px-4 py-2 rounded text-center"
+        >Download</a
+      >
+    </section>
+  </main>
+</Layout>
+
+<script>
+  const $getButton = document.getElementById("get") as HTMLButtonElement;
+  const $downloadAnchor = document.getElementById(
+    "download"
+  ) as HTMLAnchorElement;
+
+  $getButton.onclick = async () => {
+    const fileDataRes = await fetch("/api/get", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ words: "hola;mundo;como" }),
+    });
+    const fileData = await fileDataRes.json();
+
+    const dataRes = await fetch("/api/getfile", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ words: "hola;mundo;como" }),
+    });
+
+    const data = await dataRes.blob();
+    const file = new File([data], fileData.filename, {
+      type: fileData.mimeType,
+    });
+    console.log(file);
+    $downloadAnchor.setAttribute("href", URL.createObjectURL(file));
+  };
+</script>
