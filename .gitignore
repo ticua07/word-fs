@@ -15,7 +15,13 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
 
 # macOS-specific files
 .DS_Store
+
+local.db*
+
+src/db/migrations/*
+src/db/migrations/meta/*
