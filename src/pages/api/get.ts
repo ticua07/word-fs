@@ -15,9 +15,13 @@ export const POST: APIRoute = async ({ request }) => {
             mimeType: files.mimeType
         }).from(files).where(eq(files.words, words))
 
-        return new Response(JSON.stringify(res[0]))
+        if (res.length > 0) {
+            return new Response(JSON.stringify({ ...res[0], success: true }))
+        } else {
+            return new Response(JSON.stringify({ success: false }))
+        }
 
     } else {
-        return new Response()
+        return new Response(JSON.stringify({ success: false }))
     }
 }

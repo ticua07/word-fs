@@ -13,9 +13,9 @@ export const POST: APIRoute = async ({ request }) => {
             const blob = new Blob([res[0].data] as any)
             return new Response(await blob.arrayBuffer());
         } else {
-            return new Response("not found!")
+            return new Response(JSON.stringify({ success: false }))
         }
     } else {
-        return new Response("chau!")
+        return new Response(JSON.stringify({ success: false }))
     }
 }
