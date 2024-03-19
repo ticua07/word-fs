@@ -5,18 +5,48 @@ import Layout from "../../layouts/Layout.astro";
 <Layout title="Get file">
   <main class="bg-neutral-950">
     <section
-      class="w-screen h-screen flex flex-col justify-center items-center gap-4"
+      class="w-screen h-screen flex flex-col justify-center items-center"
     >
-      <button id="get" class="text-white bg-slate-900 w-36 px-4 py-2 rounded">
-        Get
-      </button>
-
-      <a
-        download
-        id="download"
-        class="text-white bg-green-800 w-36 px-4 py-2 rounded text-center"
-        >Download</a
+      <section
+        class="bg-neutral-900 flex flex-col gap-4 px-8 py-12 rounded w-80 items-center justify-center"
       >
+        <h1 class="text-white text-center text-3xl text-wrap">
+          Input your three words
+        </h1>
+        <article class="flex flex-row gap-1 w-64 justify-center text-white">
+          <input
+            autocapitalize="off"
+            autocomplete="off"
+            type="text"
+            id="first"
+            class="w-24 bg-slate-800 rounded-sm pl-1"
+          />
+          <input
+            autocapitalize="off"
+            autocomplete="off"
+            type="text"
+            id="second"
+            class="w-24 bg-slate-800 rounded-sm pl-1"
+          />
+          <input
+            autocapitalize="off"
+            autocomplete="off"
+            type="text"
+            id="third"
+            class="w-24 bg-slate-800 rounded-sm pl-1"
+          />
+        </article>
+        <button id="get" class="text-white bg-slate-900 w-72 px-4 py-2 rounded">
+          Get
+        </button>
+
+        <a
+          download
+          id="download"
+          class="text-white bg-green-800 w-72 px-4 py-2 rounded text-center cursor-not-allowed select-none"
+          >Download</a
+        >
+      </section>
     </section>
   </main>
 </Layout>
@@ -28,21 +58,32 @@ import Layout from "../../layouts/Layout.astro";
   ) as HTMLAnchorElement;
 
   $getButton.onclick = async () => {
+    const words = Array.from(document.getElementsByTagName("input"))
+      .map((el) => el.value)
+      .join(";");
+
+    console.log(words);
+
     const fileDataRes = await fetch("/api/get", {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ words: "hola;mundo;como" }),
+      body: JSON.stringify({ words: words }),
     });
+
     const fileData = await fileDataRes.json();
+
+    if (!fileData.success) {
+      return;
+    }
 
     const dataRes = await fetch("/api/getfile", {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ words: "hola;mundo;como" }),
+      body: JSON.stringify({ words: words }),
     });
 
     const data = await dataRes.blob();
@@ -50,6 +91,34 @@ import Layout from "../../layouts/Layout.astro";
       type: fileData.mimeType,
     });
     console.log(file);
+    $downloadAnchor.classList.toggle("cursor-not-allowed");
     $downloadAnchor.setAttribute("href", URL.createObjectURL(file));
   };
+
+  // Function to update input fields with clipboard content
+  function updateInputs(event: ClipboardEvent) {
+    // Check if the first input field is focused
+    if (document.activeElement === document.getElementById("first")) {
+      let clipboardData = event.clipboardData;
+      let pastedText = clipboardData!.getData("text");
+
+      let words = pastedText.split(";");
+      if (!(words.length === 3)) {
+        return;
+      }
+
+      // @ts-ignore
+      document.getElementById("first").value = words[0] || "";
+      // @ts-ignore
+      document.getElementById("second").value = words[1] || "";
+      // @ts-ignore
+      document.getElementById("third").value = words[2] || "";
+      document.getElementById("third")?.focus();
+
+      event.preventDefault();
+    }
+  }
+
+  // Listen for paste events
+  document.addEventListener("paste", updateInputs);
 </script>
