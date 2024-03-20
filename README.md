@@ -1,6 +1,6 @@
 # Word FS
 
-![Main page](https://github.com/ticua07/word-fs/assets/main.png)
+![Main page](https://raw.githubusercontent.com/ticua07/word-fs/master/assets/main.png)
 
 Save your files in a single DB, retrieve them anytime you want with a 3-word code
 
