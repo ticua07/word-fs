@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "migrate": "drizzle-kit generate:sqlite",
+    "push": "drizzle-kit push:sqlite",
     "dev-db": "turso dev --db-file local.db"
   },
   "dependencies": {
