@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { ChangeEventHandler, EventHandler } from "svelte/elements";
-
   let hasSubmitted = false;
+  let tooltip: HTMLSpanElement;
   let currentFile: File | undefined;
   let words = "";
 
@@ -26,6 +25,17 @@
       console.log(currentFile);
     }
   };
+
+  const copyLink = (event: Event) => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/get?code=${words}`
+    );
+
+    tooltip.classList.replace("opacity-0", "opacity-100");
+    setTimeout(() => {
+      tooltip.classList.replace("opacity-100", "opacity-0");
+    }, 1000);
+  };
 </script>
 
 <form
@@ -36,10 +46,25 @@
   class="flex flex-col gap-2 w-64 items-center justify-center"
   on:submit={submitForm}
 >
+  <span
+    bind:this={tooltip}
+    class="absolute not-italic opacity-0 transition-opacity bg-neutral-800 px-2 py-2 w-36 rounded-md text-white top-2 text-lg text-center"
+    >Copied link</span
+  >
+
   {#if hasSubmitted}
     <section class=" text-gray-600">
-      <h2 class="text-center">Use this words to access the uploaded file:</h2>
-      <p class="text-center text-white text-2xl">
+      <p class="text-center text-white">
+        Use the following code to access the uploaded file or
+        <button
+          type="button"
+          on:click={copyLink}
+          class="text-sky-400 underline decoration-sky-400 italic cursor-pointer relative"
+        >
+          copy this link
+        </button>
+      </p>
+      <p class="text-center text-white text-2xl py-2">
         {words}
       </p>
     </section>
