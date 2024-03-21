@@ -43,7 +43,7 @@ import Layout from "../../layouts/Layout.astro";
         <a
           download
           id="download"
-          class="text-white bg-green-800 w-72 px-4 py-2 rounded text-center cursor-not-allowed select-none"
+          class="bg-green-950 text-gray-400 w-72 px-4 py-2 rounded text-center cursor-not-allowed select-none"
           >Download</a
         >
       </section>
@@ -61,8 +61,6 @@ import Layout from "../../layouts/Layout.astro";
     const words = Array.from(document.getElementsByTagName("input"))
       .map((el) => el.value)
       .join(";");
-
-    console.log(words);
 
     const fileDataRes = await fetch("/api/get", {
       method: "POST",
@@ -90,9 +88,11 @@ import Layout from "../../layouts/Layout.astro";
     const file = new File([data], fileData.filename, {
       type: fileData.mimeType,
     });
-    console.log(file);
     $downloadAnchor.classList.toggle("cursor-not-allowed");
     $downloadAnchor.setAttribute("href", URL.createObjectURL(file));
+    $downloadAnchor.setAttribute("download", fileData.filename);
+    $downloadAnchor.classList.replace("text-gray-400", "text-white");
+    $downloadAnchor.classList.replace("bg-green-950", "bg-green-800");
   };
 
   // Function to update input fields with clipboard content
@@ -120,5 +120,6 @@ import Layout from "../../layouts/Layout.astro";
   }
 
   // Listen for paste events
+
   document.addEventListener("paste", updateInputs);
 </script>
