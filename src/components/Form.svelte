@@ -1,6 +1,9 @@
 <script lang="ts">
+  import type { ChangeEventHandler, EventHandler } from "svelte/elements";
+
   let hasSubmitted = false;
-  let words = "hola;mundo;como";
+  let currentFile: File | undefined;
+  let words = "";
 
   const submitForm = async (e: Event) => {
     e.preventDefault();
@@ -15,6 +18,13 @@
     const data = await res.json();
     words = data.code;
     hasSubmitted = true;
+  };
+
+  const setCurrentFile = (event: any) => {
+    if (event.currentTarget.files.length > 0) {
+      currentFile = event.currentTarget.files[0];
+      console.log(currentFile);
+    }
   };
 </script>
 
@@ -34,12 +44,22 @@
       </p>
     </section>
   {/if}
-  <input id="upload" name="upload" type="file" class="hidden" />
+  <input
+    id="upload"
+    name="upload"
+    type="file"
+    class="hidden"
+    on:change={setCurrentFile}
+  />
   <label
     for="upload"
     class="text-white block border-green-800 border-2 w-64 px-4 py-2 rounded text-center cursor-pointer"
   >
-    Choose File
+    {#if currentFile}
+      {currentFile.name}
+    {:else}
+      Choose File
+    {/if}
   </label>
 
   <button

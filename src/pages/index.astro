@@ -11,7 +11,7 @@ import Form from "../components/Form.svelte";
       <section class="gap-4 flex flex-col bg-neutral-900 p-8 rounded py-8">
         <h1 class="text-white text-center text-3xl mb-4">Word FS</h1>
         <article>
-          <Form client:load />
+          <Form client:only="svelte" />
         </article>
         <hr class="h-px border-0 dark:bg-gray-800" />
         <article>
