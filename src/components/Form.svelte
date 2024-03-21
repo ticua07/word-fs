@@ -3,9 +3,20 @@
   let tooltip: HTMLSpanElement;
   let currentFile: File | undefined;
   let words = "";
+  let alreadyUploaded = false;
 
   const submitForm = async (e: Event) => {
     e.preventDefault();
+
+    if (alreadyUploaded) {
+      console.log("skipping, already loading");
+      return;
+    } else {
+      alreadyUploaded = true;
+    }
+
+    console.log("loading");
+
     hasSubmitted = false;
 
     const formData = new FormData(e.currentTarget as HTMLFormElement);
@@ -20,6 +31,7 @@
   };
 
   const setCurrentFile = (event: any) => {
+    alreadyUploaded = false;
     if (event.currentTarget.files.length > 0) {
       currentFile = event.currentTarget.files[0];
       console.log(currentFile);
