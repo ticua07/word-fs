@@ -1,5 +1,9 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+
+const code = Astro.url.searchParams.get("code");
+let words = code?.split(";");
+let verifyCode = words?.length === 3;
 ---
 
 <Layout title="Get file">
@@ -20,6 +24,7 @@ import Layout from "../../layouts/Layout.astro";
             type="text"
             id="first"
             class="w-24 bg-slate-800 rounded-sm pl-1"
+            value={verifyCode ? words![0] : ""}
           />
           <input
             autocapitalize="off"
@@ -27,6 +32,7 @@ import Layout from "../../layouts/Layout.astro";
             type="text"
             id="second"
             class="w-24 bg-slate-800 rounded-sm pl-1"
+            value={verifyCode ? words![1] : ""}
           />
           <input
             autocapitalize="off"
@@ -34,6 +40,7 @@ import Layout from "../../layouts/Layout.astro";
             type="text"
             id="third"
             class="w-24 bg-slate-800 rounded-sm pl-1"
+            value={verifyCode ? words![0] : ""}
           />
         </article>
         <button id="get" class="text-white bg-slate-900 w-72 px-4 py-2 rounded">
@@ -44,8 +51,8 @@ import Layout from "../../layouts/Layout.astro";
           download
           id="download"
           class="bg-green-950 text-gray-400 w-72 px-4 py-2 rounded text-center cursor-not-allowed select-none"
-          >Download</a
-        >
+          >Download
+        </a>
       </section>
     </section>
   </main>
@@ -91,6 +98,7 @@ import Layout from "../../layouts/Layout.astro";
     $downloadAnchor.classList.toggle("cursor-not-allowed");
     $downloadAnchor.setAttribute("href", URL.createObjectURL(file));
     $downloadAnchor.setAttribute("download", fileData.filename);
+    $downloadAnchor.innerText = `Download ${fileData.filename}`;
     $downloadAnchor.classList.replace("text-gray-400", "text-white");
     $downloadAnchor.classList.replace("bg-green-950", "bg-green-800");
   };
