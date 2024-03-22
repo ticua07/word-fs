@@ -9,13 +9,10 @@
     e.preventDefault();
 
     if (alreadyUploaded) {
-      console.log("skipping, already loading");
       return;
     } else {
       alreadyUploaded = true;
     }
-
-    console.log("loading");
 
     hasSubmitted = false;
 
@@ -34,7 +31,6 @@
     alreadyUploaded = false;
     if (event.currentTarget.files.length > 0) {
       currentFile = event.currentTarget.files[0];
-      console.log(currentFile);
     }
   };
 
