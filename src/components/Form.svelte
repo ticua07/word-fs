@@ -36,7 +36,7 @@
 
   const copyLink = (event: Event) => {
     navigator.clipboard.writeText(
-      `${window.location.origin}/get?code=${words}`
+      `${window.location.origin}/file?code=${words}`
     );
 
     tooltip.classList.replace("opacity-0", "opacity-100");
