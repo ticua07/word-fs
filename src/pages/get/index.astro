@@ -67,13 +67,10 @@ let verifyCode = words?.length === 3;
 
   $getButton.onclick = async () => {
     if (loading) {
-      console.log("skipping, already loading");
       return;
     } else {
       loading = true;
     }
-
-    console.log("loading");
 
     const words = Array.from(document.getElementsByTagName("input"))
       .map((el) => el.value)
