@@ -1,22 +1,27 @@
 <script lang="ts">
+  const TEN_MB_IN_BYTES = 10485760;
   let hasSubmitted = false;
   let tooltip: HTMLSpanElement;
   let currentFile: File | undefined;
   let words = "";
   let alreadyUploaded = false;
+  let error = false;
 
   const submitForm = async (e: Event) => {
     e.preventDefault();
+    error = false;
 
-    if (alreadyUploaded) {
-      return;
-    } else {
-      alreadyUploaded = true;
-    }
+    if (alreadyUploaded) return;
+    else alreadyUploaded = true;
 
     hasSubmitted = false;
-
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+
+    const file = formData.get("upload") as File;
+    if (file.size > TEN_MB_IN_BYTES) {
+      error = true;
+      return;
+    }
 
     const res = await fetch("/api/upload", {
       method: "POST",
@@ -99,4 +104,7 @@
     class="text-white block bg-green-800 w-64 px-4 py-2 rounded text-center"
     >Submit</button
   >
+  {#if error}
+    <p class="text-red-300">File size must be less than 10MB.</p>
+  {/if}
 </form>
